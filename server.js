@@ -20,10 +20,6 @@ app.use((err, req, res, next) => {
   return res.status(status).json(message);
 });
 
-app.use("/", (req, res) => {
-  res.send("server is working");
-});
-
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
