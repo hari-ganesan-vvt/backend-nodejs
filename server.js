@@ -1,25 +1,26 @@
 import express from "express";
 import dotenv from "dotenv";
-import db from "./config/database.js";
 import logger from "morgan";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
+
+//config
 dotenv.config();
-
-//db connection
-db.connect((error) => {
-  if (error) {
-    throw error;
-  } else {
-    console.log("Database is connected successfully!");
-  }
-});
-
 const app = express();
 app.use(express.json());
 app.use(logger("dev"));
-app.use("/api/users", userRouter);
+app.use(cors());
+app.use(cookieParser());
+app.use("/api/v1/users", userRouter);
+//errorHandling
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message || "Custom server error";
+  return res.status(status).json(message);
+});
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
   console.log("Server is running on", PORT);
